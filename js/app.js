@@ -22,7 +22,9 @@
  * Define Global Variables
  * 
 */
-
+const sections = document.querySelectorAll('section');
+const navList = document.getElementById('navbar__list');
+const fragment = document.createDocumentFragment();  // ← uses a DocumentFragment instead of a <div>
 
 /**
  * End Global Variables
@@ -30,7 +32,16 @@
  * 
 */
 
+// Looping thorugh the sections to get their ID and create list items for the navbar 
+for (let i = 0; i < sections.length; i++){;
+  const sectionId = sections[i].id;
+  // const sectionData = sections[i].getAttribute('data-nav');
+  const listItem = document.createElement('li')
+  listItem.textContent = sectionId;
+  fragment.appendChild(listItem);
+}
 
+navList.appendChild(fragment);
 
 /**
  * End Helper Functions
