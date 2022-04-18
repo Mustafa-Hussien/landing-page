@@ -39,6 +39,9 @@ for (let i = 0; i < sections.length; i++){;
   const listItem = document.createElement('li')
   listItem.textContent = sectionId;
   fragment.appendChild(listItem);
+  // the size of an element and its position relative to the viewport.
+  const viewport = sections[i].getBoundingClientRect();
+  console.log(viewport);
 }
 
 navList.appendChild(fragment);
