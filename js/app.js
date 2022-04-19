@@ -54,7 +54,7 @@ sections.forEach(section =>{
   const sectionId = section.id;
   // const sectionData = sections[i].getAttribute('data-nav');
   const listItem = document.createElement('li')
-  listItem.textContent = sectionId;
+  listItem.innerHTML = `<a href='#${sectionId}' class='menu__link'>${sectionId}</a>`;
   fragment.appendChild(listItem);
 })
 // build the nav
