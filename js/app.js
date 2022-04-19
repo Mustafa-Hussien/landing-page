@@ -32,19 +32,16 @@ const fragment = document.createDocumentFragment();  // ← uses a DocumentFragm
  * 
 */
 
-// Looping thorugh the sections to get their ID and create list items for the navbar 
-for (let i = 0; i < sections.length; i++){;
-  const sectionId = sections[i].id;
-  // const sectionData = sections[i].getAttribute('data-nav');
-  const listItem = document.createElement('li')
-  listItem.textContent = sectionId;
-  fragment.appendChild(listItem);
-  // the size of an element and its position relative to the viewport.
-  const viewport = sections[i].getBoundingClientRect();
-  console.log(viewport);
+// Function to test if the element is in the view port or not.
+function isInViewport(element) {
+  const rect = element.getBoundingClientRect();
+  return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+  );
 }
-
-navList.appendChild(fragment);
 
 /**
  * End Helper Functions
@@ -52,11 +49,28 @@ navList.appendChild(fragment);
  * 
 */
 
+// Looping thorugh the sections to get their ID and create list items for the navbar 
+sections.forEach(section =>{
+  const sectionId = section.id;
+  // const sectionData = sections[i].getAttribute('data-nav');
+  const listItem = document.createElement('li')
+  listItem.textContent = sectionId;
+  fragment.appendChild(listItem);
+})
 // build the nav
+navList.appendChild(fragment);
 
-
-// Add class 'active' to section when near top of viewport
-
+// Check if the section is in the view port to add active class
+window.addEventListener('scroll', function(){
+  sections.forEach(section => {
+    if (isInViewport(section)){
+      section.classList.add('your-active-class');
+      console.log(section)
+    } else {
+      section.classList.remove('your-active-class');
+    }
+  })
+} )
 
 // Scroll to anchor ID using scrollTO event
 
