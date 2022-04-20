@@ -25,6 +25,9 @@
 const sections = document.querySelectorAll('section');
 const navList = document.getElementById('navbar__list');
 const fragment = document.createDocumentFragment();  // ← uses a DocumentFragment instead of a <div>
+var navTimeOut = setTimeout(() => { // to hide the navbar while not scrolling
+  navList.style.display = "none";
+}, 3000);  
 
 /**
  * End Global Variables
@@ -35,10 +38,8 @@ const fragment = document.createDocumentFragment();  // ← uses a DocumentFragm
 // Function to test if the element is in the view port or not.
 function isInViewport(element) {
   const rect = element.getBoundingClientRect();
-  console.log('top:' + rect.top)
-  console.log('bottom:' + rect.bottom)
   return (
-      rect.top >= 0  &&
+      rect.top >= -50 &&
       rect.bottom <= window.innerHeight  
   );
 }
@@ -61,6 +62,8 @@ sections.forEach(section =>{
 })
 // Adding each created list item to the navbar 
 navList.appendChild(fragment);
+// Set first link to be active by default;
+document.querySelector('.menu__link').classList.add('active');
 
 
 
@@ -84,16 +87,22 @@ links.forEach(link => {
       top: section.offsetTop,
       behavior: "smooth"
     })
-    console.log(section);
   })
 })
 
 // Check if the section is in the view port to add active class
 window.addEventListener('scroll', function(){
+  // Show the navbar while scrolling and start a new timer to hide it
+  navList.style.display = "block"
+  clearTimeout(navTimeOut);
+  navTimeOut = setTimeout(() => {
+    navList.style.display = "none";
+  }, 3000);  
   sections.forEach(section => {
     // Determine the link of the current section
     const sectionData = section.getAttribute('data-nav');
     const link = navList.querySelector(`[data-nav="${sectionData}"]`);
+    // Delete the active section class from all sections for reset
     // Check if the current section is in the view port 
     if (isInViewport(section)){
       // Remove the active class from all links
@@ -102,11 +111,12 @@ window.addEventListener('scroll', function(){
       })
       // Add the active class to the desired link
       link.classList.add('active');
+      // Remove the active class from all sections
+      sections.forEach(section => {
+        section.classList.remove('your-active-class');
+      })
       // Add the active class to current section
       section.classList.add('your-active-class');
-    } else {
-      // remove the active class to current section
-      section.classList.remove('your-active-class');
-    }
+    } 
   })
-} )
+})
