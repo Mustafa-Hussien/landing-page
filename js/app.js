@@ -52,9 +52,10 @@ function isInViewport(element) {
 // Looping thorugh the sections to get their ID and create list items for the navbar 
 sections.forEach(section =>{
   const sectionId = section.id;
-  // const sectionData = sections[i].getAttribute('data-nav');
+  const sectionHeader = section.querySelector('h2');
+  const sectionData = section.getAttribute('data-nav');
   const listItem = document.createElement('li')
-  listItem.innerHTML = `<a href='#${sectionId}' class='menu__link'>${sectionId}</a>`;
+  listItem.innerHTML = `<a href='#${sectionId}' data-nav='${sectionData}' class='menu__link'>${sectionHeader.textContent}</a>`;
   fragment.appendChild(listItem);
 })
 // build the nav
@@ -65,7 +66,6 @@ window.addEventListener('scroll', function(){
   sections.forEach(section => {
     if (isInViewport(section)){
       section.classList.add('your-active-class');
-      console.log(section)
     } else {
       section.classList.remove('your-active-class');
     }
@@ -73,7 +73,19 @@ window.addEventListener('scroll', function(){
 } )
 
 // Scroll to anchor ID using scrollTO event
-
+const links = document.querySelectorAll('.menu__link');
+links.forEach(link => {
+  link.addEventListener('click', function(e){
+    e.preventDefault();
+    const dataNav = e.target.getAttribute('data-nav');
+    const section = document.querySelector('main').querySelector(`[data-nav="${dataNav}"]`)
+    window.scrollTo({
+      top: section.offsetTop,
+      behavior: "smooth"
+    })
+    console.log(section);
+  })
+})
 
 /**
  * End Main Functions
