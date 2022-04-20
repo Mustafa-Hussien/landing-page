@@ -38,8 +38,8 @@ function isInViewport(element) {
   console.log('top:' + rect.top)
   console.log('bottom:' + rect.bottom)
   return (
-      rect.top + 250 >= 0  &&
-      rect.bottom - 250 <= window.innerHeight  
+      rect.top >= 0  &&
+      rect.bottom <= window.innerHeight  
   );
 }
 
