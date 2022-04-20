@@ -35,9 +35,11 @@ const fragment = document.createDocumentFragment();  // ← uses a DocumentFragm
 // Function to test if the element is in the view port or not.
 function isInViewport(element) {
   const rect = element.getBoundingClientRect();
+  console.log('top:' + rect.top)
+  console.log('bottom:' + rect.bottom)
   return (
-      rect.top >= 0 &&
-      (rect.bottom / window.innerHeight >= 0.50) || (rect.bottom / document.documentElement.clientHeight >= 0.50)
+      rect.top + 250 >= 0  &&
+      rect.bottom - 250 <= window.innerHeight  
   );
 }
 
@@ -49,38 +51,35 @@ function isInViewport(element) {
 
 // Looping thorugh the sections to get their ID and create list items for the navbar 
 sections.forEach(section =>{
-  const sectionId = section.id;
-  const sectionHeader = section.querySelector('h2');
-  const sectionData = section.getAttribute('data-nav');
+  const sectionId = section.id; 
+  const sectionHeader = section.querySelector('h2'); 
+  const sectionData = section.getAttribute('data-nav'); 
   const listItem = document.createElement('li')
+  // Create list item with ID && data-nav && class 
   listItem.innerHTML = `<a href='#${sectionId}' data-nav='${sectionData}' class='menu__link'>${sectionHeader.textContent}</a>`;
   fragment.appendChild(listItem);
 })
-// build the nav
+// Adding each created list item to the navbar 
 navList.appendChild(fragment);
 
-// Check if the section is in the view port to add active class
-window.addEventListener('scroll', function(){
-  sections.forEach(section => {
-    const dataNav = section.getAttribute('data-nav');
-    const link = navList.querySelector(`[data-nav="${dataNav}"]`);
-    if (isInViewport(section)){
-      section.classList.add('your-active-class');
-      link.classList.add('active');
-    } else {
-      section.classList.remove('your-active-class');
-      link.classList.remove('active');
-    }
-  })
-} )
 
-// Scroll to anchor ID using scrollTO event
+
+/**
+ * End Main Functions
+ * Begin Events
+ * 
+*/
+
+//  Scroll to section on link click
 const links = document.querySelectorAll('.menu__link');
 links.forEach(link => {
   link.addEventListener('click', function(e){
+    // Disable the anchor tags default behaivor
     e.preventDefault();
+    // Determine the section of the clicked link
     const dataNav = e.target.getAttribute('data-nav');
     const section = document.querySelector('main').querySelector(`[data-nav="${dataNav}"]`)
+    // Scroll to this section 
     window.scrollTo({
       top: section.offsetTop,
       behavior: "smooth"
@@ -89,16 +88,25 @@ links.forEach(link => {
   })
 })
 
-/**
- * End Main Functions
- * Begin Events
- * 
-*/
-
-// Build menu 
-
-// Scroll to section on link click
-
-// Set sections as active
-
-
+// Check if the section is in the view port to add active class
+window.addEventListener('scroll', function(){
+  sections.forEach(section => {
+    // Determine the link of the current section
+    const sectionData = section.getAttribute('data-nav');
+    const link = navList.querySelector(`[data-nav="${sectionData}"]`);
+    // Check if the current section is in the view port 
+    if (isInViewport(section)){
+      // Remove the active class from all links
+      links.forEach(link =>{
+        link.classList.remove('active')
+      })
+      // Add the active class to the desired link
+      link.classList.add('active');
+      // Add the active class to current section
+      section.classList.add('your-active-class');
+    } else {
+      // remove the active class to current section
+      section.classList.remove('your-active-class');
+    }
+  })
+} )
